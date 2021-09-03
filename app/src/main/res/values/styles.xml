@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.AppTheme.ThumbnailShapeAppearance" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <style name="SplashScreenTheme" parent="NoActionBar">
+        <item name ="android:windowBackground"> @drawable/splash_screen_logo</item>
+    </style>
+    
+    <style name="NoActionBar" parent="Theme.QSAssignment">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+</resources>
