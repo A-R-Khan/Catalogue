@@ -44,6 +44,10 @@ public class ProductDataSourceFirebase implements ProductDataSource {
         idsSortedArray = new ArrayList<>();
     }
 
+    /*
+    Download ids and store in memory
+    return notification to start app
+     */
     public LiveData<LiveEvent<Boolean>> downloadIds() {
 
         MutableLiveData<LiveEvent<Boolean>> resNotifier = new MutableLiveData<>();
@@ -52,6 +56,9 @@ public class ProductDataSourceFirebase implements ProductDataSource {
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET, url, null,
         response -> {
             // adding into the two-way lookup system
+            if(response.length() == 0) {
+                resNotifier.setValue(new LiveEvent<>(false));
+            }
             for(int i = 0; i<response.length(); ++i) {
                 try {
                     idsSortedArray.add((String) response.get(i));
@@ -77,6 +84,10 @@ public class ProductDataSourceFirebase implements ProductDataSource {
         if(id == null) {
             id = idsSortedArray.get(0);
         }
+        /*
+         It will never unbox to null unless the received ids list is empty in which case the app
+         won't start anyway
+        */
         int position = idToPositionMap.get(id);
         if(position == idsSortedArray.size()) {
             return new ArrayList<>();
@@ -159,6 +170,7 @@ public class ProductDataSourceFirebase implements ProductDataSource {
         }
     }
 
+    // for easy scaling
     enum ProductAttributeType {
 
         NAME("name", "product-name"),

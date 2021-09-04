@@ -3,4 +3,6 @@
     <string name="rupees">\u20B9</string>
     <string name="splash_error_message">Could not retrieve your products</string>
     <string name="splash_error_title">Oops</string>
+    <string name="anim_button_off">ANIMATIONS : OFF</string>
+    <string name="anim_button_on">ANIMATIONS : ON</string>
 </resources>

@@ -100,11 +100,11 @@ public class HomeActivity extends AppCompatActivity {
                 if(animationsOn) {
                     animationsOn = false;
                     feedBinder.setShouldAnimate(false);
-                    ((MaterialButton) v).setText("ANIMATIONS : OFF");
+                    ((MaterialButton) v).setText(R.string.anim_button_off);
                 } else {
                     animationsOn = true;
                     feedBinder.setShouldAnimate(true);
-                    ((MaterialButton) v).setText("ANIMATIONS : ON");
+                    ((MaterialButton) v).setText(R.string.anim_button_on);
                 }
             }
         });
