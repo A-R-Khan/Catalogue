@@ -106,7 +106,10 @@ public class ProductDataSourceFirebase implements ProductDataSource {
         List<String> ids = getProductIdsAfter(lastId, pageSize);
         List<LiveData<ProductModel>> products = new ArrayList<>(pageSize);
         for (String id : ids) {
-            products.add(getProduct(id));
+            LiveData<ProductModel> model = getProduct(id);
+            if(model != null) {
+                products.add(model);
+            }
         }
         return products;
     }
@@ -120,11 +123,13 @@ public class ProductDataSourceFirebase implements ProductDataSource {
     @Override
     public LiveData<ProductModel> getProduct(String id) {
 
+        if(id == null) return null;
+
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         ProductAggregatorLiveData productLiveData = new ProductAggregatorLiveData(id);
 
         // Just to be safe and prevent dangling connections
-        if (id != null) removeProductValueEventListener(id);
+        removeProductValueEventListener(id);
 
         //Attach listeners to all fields
         for(ProductAttributeType type: ProductAttributeType.values()) {
