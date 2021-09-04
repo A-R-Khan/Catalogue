@@ -21,8 +21,11 @@
                     android:topRightRadius="20dp"
                     android:bottomLeftRadius="20dp"
                     android:bottomRightRadius="0dp"/>
-                <solid
-                    android:color="#335F7D"/>
+                <gradient
+                    android:startColor="#FFCA28"
+                    android:centerColor="#FF8A65"
+                    android:endColor="#F06292"
+                    android:angle="45"/>
             </shape>
         </rotate>
     </item>

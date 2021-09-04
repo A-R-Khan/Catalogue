@@ -51,6 +51,7 @@ public class ProductDataSourceFirebase implements ProductDataSource {
         String url = "http://35.154.26.203/product-ids";
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET, url, null,
         response -> {
+            // adding into the two-way lookup system
             for(int i = 0; i<response.length(); ++i) {
                 try {
                     idsSortedArray.add((String) response.get(i));
@@ -114,11 +115,12 @@ public class ProductDataSourceFirebase implements ProductDataSource {
         // Just to be safe and prevent dangling connections
         if (id != null) removeProductValueEventListener(id);
 
-        attachProductValueEventListener(id, ProductAttributeType.NAME, productLiveData);
-        attachProductValueEventListener(id, ProductAttributeType.DESC, productLiveData);
-        attachProductValueEventListener(id, ProductAttributeType.IMAGE, productLiveData);
-        attachProductValueEventListener(id, ProductAttributeType.PRICE, productLiveData);
+        //Attach listeners to all fields
+        for(ProductAttributeType type: ProductAttributeType.values()) {
+            attachProductValueEventListener(id, type, productLiveData);
+        }
 
+        //Send a null model for pre-rendering and for further loading
         ProductModel tempModel = new ProductModel(id, null, null, null, null);
         productLiveData.setValue(tempModel);
         return productLiveData;
@@ -131,6 +133,8 @@ public class ProductDataSourceFirebase implements ProductDataSource {
                 .child(type.getNode())
                 .child(id)
                 .addValueEventListener(productValueEventListener);
+
+        //keeping track of listeners to remove them later
         listenerTracker.put(id + type.toString(), productValueEventListener);
 
     }
@@ -181,6 +185,10 @@ public class ProductDataSourceFirebase implements ProductDataSource {
         }
     }
 
+    /*
+    It just takes stuff from multiple sources and emits a value only when data is completely
+    received
+     */
     public static class ProductAggregatorLiveData extends AggregatorLiveData<ProductAttributeType, String, ProductModel> {
 
         String id;
@@ -196,8 +204,8 @@ public class ProductDataSourceFirebase implements ProductDataSource {
         }
 
         /*
-         only return if all are non-null (null in database retrieved values are replaced with hyphen just to be safe in UI later on and not
-         face any surprise errors there)
+         only return if all are non-null (null in database retrieved values are replaced with hyphen
+         just to be safe in UI later on and not face any surprise errors there)
         */
         @Override
         protected boolean checkDataForAggregability() {

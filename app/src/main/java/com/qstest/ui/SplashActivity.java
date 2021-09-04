@@ -44,9 +44,9 @@ public class SplashActivity extends AppCompatActivity {
                     }
                     else {
                         new MaterialAlertDialogBuilder(this)
-                                .setTitle("Oops")
+                                .setTitle(R.string.splash_error_title)
                                 .setBackground(getDrawable(R.drawable.black_shape))
-                                .setMessage("Could not retrieve your products")
+                                .setMessage(R.string.splash_error_message)
                                 .setPositiveButton("OK", (dialog, which) -> {
                                     dialog.dismiss();
                                 })

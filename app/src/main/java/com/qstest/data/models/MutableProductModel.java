@@ -9,10 +9,6 @@ public class MutableProductModel extends ProductModel {
         super(id, name, desc, image, price);
     }
 
-    public ProductModel makeImmutable() {
-        return new ProductModel(getId(), getName(), getDesc(), getImage(), getPrice());
-    }
-
     public void setId(String id) {
         this.id = id;
     }

@@ -1,8 +1,7 @@
 package com.qstest.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.qstest.R;
 import com.qstest.data.models.ProductModel;
 import com.qstest.viewmodels.FeedViewModel;
@@ -48,22 +48,25 @@ public class HomeActivity extends AppCompatActivity {
     private void setupRecyclerView() {
 
         recyclerView = findViewById(R.id.recycler_view);
-
         /*
         I use this adapter because it is extremely scalable and easy to use compared
         to the native RecyclerView adapter
         */
-        MultiViewAdapter adapter = new MultiViewAdapter();
+        FeedAdapter adapter = new FeedAdapter();
+        FeedBinder feedBinder = new FeedBinder(this);
 
-        adapter.registerItemBinders(new FeedAdapter(this));
+        adapter.registerItemBinders(feedBinder);
         adapter.addSection(productListSection);
 
         InfiniteLoadingHelper infiniteLoadingHelper = new InfiniteLoadingHelper(recyclerView, R.layout.loading_footer_layout) {
 
             @Override
             public void onLoadNextPage(int page) {
-                loadData();
+                boolean res = loadData();
                 markCurrentPageLoaded();
+                if(!res) {
+                    markAllPagesLoaded();
+                }
             }
 
             @Override
@@ -88,12 +91,34 @@ public class HomeActivity extends AppCompatActivity {
 
         adapter.setInfiniteLoadingHelper(infiniteLoadingHelper);
         infiniteLoadingHelper.onLoadNextPage(0);
+
+        MaterialButton button = findViewById(R.id.animation_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            boolean animationsOn = true;
+            @Override
+            public void onClick(View v) {
+                if(animationsOn) {
+                    animationsOn = false;
+                    feedBinder.setShouldAnimate(false);
+                    ((MaterialButton) v).setText("ANIMATIONS : OFF");
+                } else {
+                    animationsOn = true;
+                    feedBinder.setShouldAnimate(true);
+                    ((MaterialButton) v).setText("ANIMATIONS : ON");
+                }
+            }
+        });
     }
 
-    private void loadData() {
+    private boolean loadData() {
         List<LiveData<ProductModel>> products = feedViewModel.getNextProducts();
+        if(products.size() == 0) {
+            return false;
+        }
+        // Obtain a lock because load and render might happen simultaneously
         synchronized (this) {
             productListSection.addAll(products);
+            return true;
         }
     }
 }
