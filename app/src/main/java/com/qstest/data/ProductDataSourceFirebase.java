@@ -89,7 +89,7 @@ public class ProductDataSourceFirebase implements ProductDataSource {
          won't start anyway
         */
         int position = idToPositionMap.get(id);
-        if(position == idsSortedArray.size()) {
+        if(position == idsSortedArray.size() - 1) {
             return new ArrayList<>();
         }
         return idsSortedArray.subList(position+1,
