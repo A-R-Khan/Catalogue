@@ -1,6 +1,6 @@
 # Catalogue
 
-An app made for a company that is inexperienced and probably doesn't know what it's doing
+# An app made for a company that is inexperienced and probably doesn't know what it's doing
 
 ## A simple catalogue of products synced with server
 
