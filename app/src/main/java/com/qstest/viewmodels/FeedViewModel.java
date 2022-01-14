@@ -18,6 +18,7 @@ public class FeedViewModel extends ViewModel {
     private enum LoadStatus {
         LOADED_PAGE,
         LOADED_ALL,
+        TEST,
         ERROR;
     }
 
